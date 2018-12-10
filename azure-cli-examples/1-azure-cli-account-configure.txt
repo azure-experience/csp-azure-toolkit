@@ -1,0 +1,131 @@
+****** AUTHENTICATING TO AZURE CLI ******
+
+nagarjun@Azure:~$ az login
+Cloud Shell is automatically authenticated under the initial account signed-in with. Run 'az login' only if you need to use a different account
+To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code HDYWATD9Y to authenticate.
+
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "2f981ee7-6c60-4593-bc4b-82c9b050f722",
+    "isDefault": true,
+    "name": "Pay-As-You-Go",
+    "state": "Enabled",
+    "tenantId": "ed1c780c-db93-4b81-869a-531d7910d178",
+    "user": {
+      "name": "nagarjunkroks@hotmail.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "273a2170-63df-4fa9-be26-41f7658c5a16",
+    "isDefault": false,
+    "name": "Pay-As-You-Go",
+    "state": "Disabled",
+    "tenantId": "ed1c780c-db93-4b81-869a-531d7910d178",
+    "user": {
+      "name": "nagarjunkroks@hotmail.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "57c0d0f6-2fbd-43ca-9d46-59e13529215f",
+    "isDefault": false,
+    "name": "Concierge Subscription",
+    "state": "Enabled",
+    "tenantId": "604c1504-c6a3-4080-81aa-b33091104187",
+    "user": {
+      "name": "nagarjunkroks@hotmail.com",
+      "type": "user"
+    }
+  }
+]
+
+# Azure account list information
+nagarjun@Azure:~$ a account list
+A few accounts are skipped as they don't have 'Enabled' state. Use '--all' to display them.
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "2f981ee7-6c60-4593-bc4b-82c9b050f722",
+    "isDefault": true,
+    "name": "Pay-As-You-Go",
+    "state": "Enabled",
+    "tenantId": "ed1c780c-db93-4b81-869a-531d7910d178",
+    "user": {
+      "name": "nagarjunkroks@hotmail.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "57c0d0f6-2fbd-43ca-9d46-59e13529215f",
+    "isDefault": false,
+    "name": "Concierge Subscription",
+    "state": "Enabled",
+    "tenantId": "604c1504-c6a3-4080-81aa-b33091104187",
+    "user": {
+      "name": "nagarjunkroks@hotmail.com",
+      "type": "user"
+    }
+  }
+]
+
+nagarjun@Azure:~$ az account show --verbose --output json
+{
+  "environmentName": "AzureCloud",
+  "id": "2f981ee7-6c60-4593-bc4b-82c9b050f722",
+  "isDefault": true,
+  "name": "Pay-As-You-Go",
+  "state": "Enabled",
+  "tenantId": "ed1c780c-db93-4b81-869a-531d7910d178",
+  "user": {
+    "name": "nagarjunkroks@hotmail.com",
+    "type": "user"
+  }
+}
+
+# Azure configuration for default resource group & location
+nagarjun@Azure:~$ a configure --defaults group=cloud-shell-storage-southeastasia
+nagarjun@Azure:~$ a configure --defaults location=eastus
+
+
+****** EVERYTHING ABOUT VM & VM MANAGEMENT ******
+
+######################
+For all purpose usage
+resource-group=cloud-shell-storage-southeastasia
+location=eastus
+######################
+
+#create a azure linux vm
+az vm create --name my-first-vm --resource-group cloud-shell-storage-southeastasia --image UbuntuLTS --location eastus --size Standard_DS2_v2 --admin-username azureuser --generate-ssh-keys
+
+# output from previous command
+{  "fqdns": "",
+  "id": "/subscriptions/2f981ee7-6c60-4593-bc4b-82c9b050f722/resourceGroups/cloud-shell-storage-southeastasia/providers/Microsoft.Compute/virtualMachines/my-first-vm",
+  "location": "eastus",
+  "macAddress": "00-0D-3A-53-7B-89",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "168.61.42.224",  "resourceGroup": "cloud-shell-storage-southeastasia",
+  "zones": ""
+}
+
+#azure cli to get created instance info
+az vm get-instance-view --name my-first-vm --resource-group cloud-shell-storage-southeastasia --output table
+
+# azure cli to list size of images across a specific location
+az vm list-sizes --verbose --output table --location eastus| grep -s "DS"
+
+
+
+
+
+# azure cli to scale down vm (on image size)
+az vm resize --resource-group cloud-shell-storage-southeastasia --name my-first-vm --size Standard_DS1_v2
+
+
+************************************************
